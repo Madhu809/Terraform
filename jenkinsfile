@@ -1,0 +1,78 @@
+pipeline {
+agent any
+
+```
+environment {
+    AWS_REGION = 'ap-south-1'
+    TF_IN_AUTOMATION = 'true'
+}
+
+stages {
+
+    stage('Checkout') {
+        steps {
+            git branch: 'main',
+            url: 'https://github.com/Madhu809/Terraform.git'
+        }
+    }
+
+    stage('Terraform Init') {
+        steps {
+            sh '''
+                terraform init
+            '''
+        }
+    }
+
+    stage('Terraform Format Check') {
+        steps {
+            sh '''
+                terraform fmt -check -recursive
+            '''
+        }
+    }
+
+    stage('Terraform Validate') {
+        steps {
+            sh '''
+                terraform validate
+            '''
+        }
+    }
+
+    stage('Terraform Plan') {
+        steps {
+            sh '''
+                terraform plan -out=tfplan
+            '''
+        }
+    }
+
+    stage('Manual Approval') {
+        steps {
+            input message: 'Do you want to apply Terraform changes?'
+        }
+    }
+
+    stage('Terraform Apply') {
+        steps {
+            sh '''
+                terraform apply -auto-approve tfplan
+            '''
+        }
+    }
+}
+
+post {
+    success {
+        echo 'Terraform deployment successful'
+    }
+
+    failure {
+        echo 'Terraform deployment failed'
+    }
+}
+```
+
+}
+
