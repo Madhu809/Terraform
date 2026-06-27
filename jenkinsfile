@@ -20,7 +20,7 @@ stages {
     stage('Terraform Init') {
         steps {
             sh '''
-                terraform init -migrate-state 
+                terraform init -migrate-state -input=false
             '''
         }
     }
