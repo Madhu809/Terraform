@@ -14,7 +14,17 @@ resource "aws_instance" "web_server" {
 resource "aws_s3_bucket" "my_test_bucket" {
   bucket = "terraform-project-bucket-madhun21"
 }
+
+resource "aws_s3_bucket_ownership_controls" "ownership" {
+  bucket = aws_s3_bucket.my_test_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 resource "aws_s3_bucket_acl" "my_test_bucket_acl" {
+    depends_on = [aws_s3_bucket_ownership_controls.ownership]
     bucket = aws_s3_bucket.my_test_bucket.id
     acl = "private"
 }
