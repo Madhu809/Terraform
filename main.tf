@@ -24,3 +24,13 @@ resource "aws_s3_bucket_versioning"  "my_test_bucket_versioning" {
         status = "Enabled"
     }
 }
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+  bucket = aws_s3_bucket.my_test_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "AES256"
+    }
+  }
+}
