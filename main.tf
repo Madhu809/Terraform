@@ -15,6 +15,7 @@ resource "aws_s3_bucket" "my_test_bucket" {
   bucket = "terraform-project-bucket-madhun21"
 }
 resource "aws_s3_bucket_acl" "my_test_bucket_acl" {
+    bucket = aws_s3_bucket.my_test_bucket.id
     acl = "private"
 }
 resource "aws_s3_bucket_versioning"  "my_test_bucket_versioning" {
